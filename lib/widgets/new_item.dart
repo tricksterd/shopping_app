@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:shopping_app/data/categories.dart';
+import 'package:shopping_app/models/category.dart';
+import 'package:shopping_app/models/grocery_item.dart';
 
 class NewItem extends StatefulWidget {
   const NewItem({super.key});
@@ -13,8 +16,19 @@ class NewItem extends StatefulWidget {
 class _NewItemState extends State<NewItem> {
   final _formKey = GlobalKey<FormState>();
 
+  String _enteredName = '';
+  int _enteredQuantity = 1;
+  Category _selectedCategory = categories[Categories.vegetables]!;
+
   void _saveItem() {
-    _formKey.currentState!.validate();
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      Navigator.of(context).pop(GroceryItem(
+          id: DateTime.now.toString(),
+          name: _enteredName,
+          quantity: _enteredQuantity,
+          category: _selectedCategory));
+    }
   }
 
   @override
@@ -39,13 +53,16 @@ class _NewItemState extends State<NewItem> {
                     }
                     return null;
                   },
+                  onSaved: (value) {
+                    _enteredName = value!;
+                  },
                 ),
                 Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   Expanded(
                     child: TextFormField(
                       decoration:
                           const InputDecoration(label: Text('Quantity')),
-                      initialValue: '1',
+                      initialValue: _enteredQuantity.toString(),
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value == null ||
@@ -56,30 +73,40 @@ class _NewItemState extends State<NewItem> {
                         }
                         return null;
                       },
+                      onSaved: (value) {
+                        _enteredQuantity = int.tryParse(value!)!;
+                      },
                     ),
                   ),
                   const SizedBox(
                     width: 8,
                   ),
                   Expanded(
-                    child: DropdownButtonFormField(items: [
-                      for (final category in categories.entries)
-                        DropdownMenuItem(
-                            value: category.value,
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 16,
-                                  height: 16,
-                                  color: category.value.color,
-                                ),
-                                const SizedBox(
-                                  width: 6,
-                                ),
-                                Text(category.value.title)
-                              ],
-                            ))
-                    ], onChanged: (value) {}),
+                    child: DropdownButtonFormField(
+                        value: _selectedCategory,
+                        items: [
+                          for (final category in categories.entries)
+                            DropdownMenuItem(
+                                value: category.value,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 16,
+                                      height: 16,
+                                      color: category.value.color,
+                                    ),
+                                    const SizedBox(
+                                      width: 6,
+                                    ),
+                                    Text(category.value.title)
+                                  ],
+                                ))
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedCategory = value!;
+                          });
+                        }),
                   )
                 ]),
                 const SizedBox(height: 12),
