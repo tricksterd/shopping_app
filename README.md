@@ -8,3 +8,8 @@ Simple shopping app, work with Firebase Realtime database. It's possible to add,
 <img src="https://github.com/user-attachments/assets/380b384e-5034-41ef-8bad-6d3b2a7ac198" width="300" height="600" />
 <img src="https://github.com/user-attachments/assets/2d7933f0-c03b-41f3-aa50-a7b6fe032ef9" width="300" height="600" />
 
+</br>
+
+![Screenshot from 2024-09-08 13-38-06](https://github.com/user-attachments/assets/35c858c5-3a96-478e-a1d8-73997c6b73cd)
+
+
